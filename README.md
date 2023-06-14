@@ -12,6 +12,14 @@ init cusn-cli in project
 
 ### cusn add
 
+```shell
+
 cusn add --page=<PageName> --path=<Path>
 
+```
+
+```shell
+
 cusn add --component=<PageName> --path=<Path>
+
+```
