@@ -1,0 +1,13 @@
+{
+  "name": "cusn-cli",
+  "version": "1.0.0",
+  "main": "bin/index.js",
+  "type": "module",
+  "bin": {
+    "cusn": "./bin/index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "yargs": "^17.7.2"
+  }
+}
