@@ -58,11 +58,15 @@ yargs(hideBinArgv)
         return;
       }
       createDirectory(`${"src"}/${path}/${component || page}`);
+      const content = fs.readFileSync("./patterns/Page.pattern", "utf8");
+
+      const pageContent = content.replace(/__PAGE_NAME__/g, page);
       fs.writeFileSync(
         `${"src"}/${path}/${component || page}/${
           component || path
         }.component.tsx`,
-        ""
+        pageContent,
+        "utf8"
       );
       fs.writeFileSync(`${"src"}/${path}/${component || page}/types.d.ts`, "");
     }

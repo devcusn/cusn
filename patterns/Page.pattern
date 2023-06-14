@@ -1,0 +1,9 @@
+import React from 'react'
+
+import { PageProps } from './types.d'
+
+const __PAGE_NAME__:React.FunctionComponent<PageProps> = () => {
+    return <div>Hello I am a __PAGE_NAME__</div>
+}
+
+export default __PAGE_NAME__
