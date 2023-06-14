@@ -58,7 +58,11 @@ yargs(hideBinArgv)
         return;
       }
       createDirectory(`${"src"}/${path}/${component || page}`);
-      const content = fs.readFileSync("./patterns/Page.pattern", "utf8");
+      const newPath = path.join(
+        new URL(import.meta.url).pathname,
+        "/patterns/Page.pattern"
+      );
+      const content = fs.readFileSync(newPath, "utf8");
 
       const pageContent = content.replace(/__PAGE_NAME__/g, page);
       fs.writeFileSync(

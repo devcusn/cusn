@@ -8,6 +8,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "cusn-cli": "^1.0.0",
     "yargs": "^17.7.2"
   }
 }
