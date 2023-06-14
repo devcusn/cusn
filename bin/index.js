@@ -3,6 +3,7 @@ import fs from "fs";
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import { createDirectory } from "../utils/path.js";
 
 const hideBinArgv = hideBin(process.argv);
 //init project
@@ -25,17 +26,45 @@ yargs(hideBinArgv)
     }
   )
   .demandCommand(1, "You need to specify a command.")
-  .help();
+  .help().argv;
 
-//add page
+//add page or component
 yargs(hideBinArgv)
   .command(
     "add",
     "add page",
-    () => {},
+    (yargs) => {
+      yargs.option("path", {
+        describe: "Path for the page/component",
+        demandOption: true,
+        type: "string",
+      });
+      yargs.option("component", {
+        describe: "Component name",
+        type: "string",
+      });
+      yargs.option("page", {
+        describe: "Page name",
+        type: "string",
+      });
+    },
     (argv) => {
-      fs.writeFileSync("HomePage.tsx", "");
-      console.log("HomePage.tsx created");
+      const { path, component, page } = argv;
+
+      if (!path || (!component && !page)) {
+        console.error(
+          "Error: You must provide a --path and either --component or --page."
+        );
+        return;
+      }
+      createDirectory(`${"src"}/${path}/${component || page}`);
+      fs.writeFileSync(
+        `${"src"}/${path}/${component || page}/${
+          component || path
+        }.component.tsx`,
+        ""
+      );
+      fs.writeFileSync(`${"src"}/${path}/${component || page}/types.d.ts`, "");
     }
   )
   .demandCommand(1, "You need to specify a command.")
