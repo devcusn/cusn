@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 import fs from "fs";
-
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { createDirectory } from "../utils/path.js";
-
+const currentFilePath = fileURLToPath(import.meta.url);
+const currentDirPath = dirname(currentFilePath);
 const hideBinArgv = hideBin(process.argv);
 //init project
 yargs(hideBinArgv)
@@ -58,10 +60,7 @@ yargs(hideBinArgv)
         return;
       }
       createDirectory(`${"src"}/${path}/${component || page}`);
-      const newPath = path.join(
-        new URL(import.meta.url).pathname,
-        "/patterns/Page.pattern"
-      );
+      const newPath = `${currentDirPath}/patterns/Page.pattern`;
       const content = fs.readFileSync(newPath, "utf8");
 
       const pageContent = content.replace(/__PAGE_NAME__/g, page);
