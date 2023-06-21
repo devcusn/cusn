@@ -14,12 +14,6 @@ init cusn-cli in project
 
 ```shell
 
-cusn add --page=<PageName> --path=<Path>
-
-```
-
-```shell
-
-cusn add --component=<PageName> --path=<Path>
+cusn add --pattern=<PageName> --path=<Path> --name=<Path>
 
 ```
