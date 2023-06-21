@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 import fs from "fs";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
+import path,{ dirname } from "path";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { createDirectory } from "../utils/path.js";
+
 const currentFilePath = fileURLToPath(import.meta.url);
 const currentDirPath = dirname(currentFilePath);
+const projectDirPath = dirname(currentDirPath)
 const hideBinArgv = hideBin(process.argv);
+
 //init project
 yargs(hideBinArgv)
   .command(
@@ -17,14 +20,18 @@ yargs(hideBinArgv)
     (argv) => {
       const data = {
         type: "simple",
+        baseURL: "src"
       };
-
+      createDirectory(`.cusn`);
+      createDirectory(`.cusn/patterns`);
       const jsonData = JSON.stringify(data, null, 2);
-
+      const content = fs.readFileSync(path.join(projectDirPath,'patterns','example.pattern.cusn'), "utf8");
+      const content2 = fs.readFileSync(path.join(projectDirPath,'patterns','types.pattern.cusn'), "utf8");
+      fs.writeFileSync(".cusn/patterns/example.pattern.cusn", content);
+      fs.writeFileSync(".cusn/patterns/types.pattern.cusn", content2);
       // Write the JSON data to cusn.json file
-      fs.writeFileSync("cusn.config.json", jsonData);
-
-      console.log("cusn.json file created!");
+      fs.writeFileSync(".cusn/cusn.config.json", jsonData);
+      console.log("project init");
     }
   )
   .demandCommand(1, "You need to specify a command.")
@@ -41,37 +48,35 @@ yargs(hideBinArgv)
         demandOption: true,
         type: "string",
       });
-      yargs.option("component", {
-        describe: "Component name",
+      yargs.option("pattern", {
+        describe: "pattern name",
         type: "string",
       });
-      yargs.option("page", {
-        describe: "Page name",
+      yargs.option("name", {
+        describe: "file name",
         type: "string",
       });
     },
     (argv) => {
-      const { path, component, page } = argv;
+      const { path, pattern ,name} = argv;
 
-      if (!path || (!component && !page)) {
+      if (!path || !pattern || !name) {
         console.error(
-          "Error: You must provide a --path and either --component or --page."
+          "Error: You must provide a --path and pattern."
         );
         return;
       }
-      createDirectory(`${"src"}/${path}/${component || page}`);
-      const newPath = `${currentDirPath}/patterns/Page.pattern`;
+      createDirectory(`${"src"}/${path}/${name}`);
+      const newPath = `./.cusn/patterns/${pattern}.pattern.cusn`;
       const content = fs.readFileSync(newPath, "utf8");
 
-      const pageContent = content.replace(/__PAGE_NAME__/g, page);
+      const pageContent = content.replace(/__PAGE_NAME__/g, name);
       fs.writeFileSync(
-        `${"src"}/${path}/${component || page}/${
-          component || path
-        }.component.tsx`,
+        `${"src"}/${path}/${name}/${name}.component.tsx`,
         pageContent,
         "utf8"
       );
-      fs.writeFileSync(`${"src"}/${path}/${component || page}/types.d.ts`, "");
+      fs.writeFileSync(`${"src"}/${path}/${name}/types.d.ts`, "");
     }
   )
   .demandCommand(1, "You need to specify a command.")
